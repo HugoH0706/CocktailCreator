@@ -1,0 +1,75 @@
+from flask import Flask, request, render_template, redirect
+from flask import make_response, url_for, jsonify
+from flask_bootstrap import Bootstrap
+import requests
+import json
+
+app = Flask(__name__)
+bootstrap = Bootstrap(app)
+
+IP = 'http://192.168.1.204/drink'
+mojitoJSON = { "1":2, "2":0, "3":1.5, "4":0 } # aantal seconde dat de motor aan moet per ingredient
+pinaColadaJSON = { "1":0, "2":100, "3":0, "4":150 }
+longIslandIceTeaJSON = { "1":100, "2":150, "3":0, "4":0 }
+sexOnTheBeachJSON = { "1":0, "2":150, "3":150, "4":0 }
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/user/<name>')
+def user(name):
+    return render_template('user.html', name=name)
+
+@app.route('/cocktail', methods=['GET', 'POST'])
+def cocktail():
+    return render_template('cocktail.html')
+
+@app.route('/cocktail1', methods=['GET', 'POST'])
+def cocktail1():
+    if request.method == 'POST':
+        if request.form.get('sendPOST1') == 'Make Mojito!':
+            print("Make Mojito")
+            requests.post(IP, json = mojitoJSON)
+        else:
+            pass
+    return render_template('cocktail1.html')
+
+
+@app.route('/cocktail2', methods=['GET', 'POST'])
+def cocktail2():
+    if request.method == 'POST':
+        if request.form.get('sendPOST2') == 'Make Pina Colada!':
+            print("Make Pina Colada")
+            requests.post(IP, json = pinaColadaJSON)
+        else:
+            pass
+    return render_template('cocktail2.html')
+
+@app.route('/cocktail3', methods=['GET', 'POST'])
+def cocktail3():
+    if request.method == 'POST':
+        if request.form.get('sendPOST3') == 'Make Long Island Ice Tea!':
+            print("Make Long Island Ice Tea")
+            requests.post(IP, json = longIslandIceTeaJSON)
+        else:
+            pass
+    return render_template('cocktail3.html')
+
+@app.route('/cocktail4', methods=['GET', 'POST'])
+def cocktail4():
+    if request.method == 'POST':
+        if request.form.get('sendPOST4') == 'Make Sex On The Beach!':
+            print("Make Sex On The Beach")
+            requests.post(IP, json = sexOnTheBeachJSON)
+        else:
+            pass
+    return render_template('cocktail4.html')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
